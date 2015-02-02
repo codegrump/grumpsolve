@@ -3,22 +3,24 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
+
 import static grumpsolve.algebra.Expressions.*;
 
 @Immutable
 class ArcSin extends UnaryOperator {
 
-    static Expression arcsin(Expression e) {
+    static Expression arcsin(@Nonnull Expression e) {
         return e instanceof Constant ? c(Math.asin(cv(e)))
                 : new ArcSin(e);
     }
 
-    private ArcSin(Expression e) {
+    private ArcSin(@Nonnull Expression e) {
         super(e);
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return Math.asin(e.evaluate(solution));
     }
 
@@ -28,7 +30,7 @@ class ArcSin extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Parameter p) {
         // (1/sqrt(1 - e^2))da
         Expression e2 = square(e);
         Expression de = e.partialWithRespectTo(p);

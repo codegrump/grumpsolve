@@ -3,6 +3,7 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 @Immutable
@@ -27,7 +28,7 @@ final class Constant extends Expression {
     }
 
     @Override
-    public boolean dependsOn(Parameter p) {
+    public boolean dependsOn(@Nonnull Parameter p) {
         return false;
     }
 
@@ -42,7 +43,7 @@ final class Constant extends Expression {
     }
 
     @Override
-    protected void addParameters(Set<Parameter> parameters) {
+    protected void addParameters(@Nonnull Set<Parameter> parameters) {
         //no addParameters
     }
 

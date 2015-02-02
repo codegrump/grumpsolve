@@ -3,24 +3,26 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
+
 import static grumpsolve.algebra.Expressions.*;
 
 @Immutable
 final class Negation extends UnaryOperator {
 
-    static Expression negate(Expression e) {
+    static Expression negate(@Nonnull Expression e) {
         return e == ZERO ? ZERO
                 : e instanceof Constant ? c(-cv(e))
                 : e instanceof Negation ? ((Negation) e).e
                 : new Negation(e);
     }
 
-    private Negation(Expression e) {
+    private Negation(@Nonnull Expression e) {
         super(e);
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return -e.evaluate(solution);
     }
 
@@ -30,7 +32,7 @@ final class Negation extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Parameter p) {
         return negate(e.partialWithRespectTo(p));
     }
 }

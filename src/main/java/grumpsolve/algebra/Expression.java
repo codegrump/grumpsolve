@@ -3,6 +3,7 @@ package grumpsolve.algebra;
 import com.google.common.collect.ImmutableSet;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,13 +15,13 @@ public abstract class Expression {
         return parameters;
     }
 
-    public abstract boolean dependsOn(Parameter p);
+    public abstract boolean dependsOn(@Nonnull Parameter p);
 
-    public abstract double evaluate(Solution solution);
+    public abstract double evaluate(@Nonnull Solution solution);
 
-    protected abstract void addParameters(Set<Parameter> parameters);
+    protected abstract void addParameters(@Nonnull Set<Parameter> parameters);
 
-    abstract Expression partialWithRespectTo(Parameter p);
+    abstract Expression partialWithRespectTo(@Nonnull Parameter p);
 
     abstract boolean isConstant();
 

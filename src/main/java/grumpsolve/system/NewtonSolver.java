@@ -5,6 +5,7 @@ import grumpsolve.algebra.Expression;
 import grumpsolve.algebra.Parameter;
 import no.uib.cipr.matrix.*;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import static grumpsolve.algebra.Expressions.partialWithRespectTo;
@@ -14,7 +15,7 @@ public class NewtonSolver {
 
     private static final int NUM_NEWTON_ITER = 50;
 
-    public static NewtonSolver make(ExpressionList expressions) {
+    public static NewtonSolver make(@Nonnull ExpressionList expressions) {
         ImmutableList<Parameter> parameters = ImmutableList.copyOf(expressions.parameters());
 
         int m = expressions.size();
@@ -48,7 +49,7 @@ public class NewtonSolver {
         this.parameters = parameters;
     }
 
-    public Solution newtonSolve(Solution s0) {
+    public Solution newtonSolve(@Nonnull Solution s0) {
         int iter = 0;
         Solution solution = s0;
         boolean converged = false;
@@ -99,6 +100,7 @@ public class NewtonSolver {
             } catch (MatrixSingularException e) {
                 return false;
             }
+            //noinspection SuspiciousNameCombination
             a.transMult(z, x);
             return true;
         }

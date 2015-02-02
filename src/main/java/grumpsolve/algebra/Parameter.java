@@ -3,6 +3,7 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 import static grumpsolve.algebra.Constant.ONE;
@@ -22,22 +23,22 @@ public final class Parameter extends Expression implements Comparable<Parameter>
     }
 
     @Override
-    public boolean dependsOn(Parameter p) {
+    public boolean dependsOn(@Nonnull Parameter p) {
         return id == p.id;
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return solution.get(id);
     }
 
     @Override
-    public Expression partialWithRespectTo(Parameter p) {
+    public Expression partialWithRespectTo(@Nonnull Parameter p) {
         return (id == p.id ? ONE : ZERO);
     }
 
     @Override
-    public int compareTo(Parameter o) {
+    public int compareTo(@Nonnull Parameter o) {
         return Long.compare(id, o.id);
     }
 
@@ -57,7 +58,7 @@ public final class Parameter extends Expression implements Comparable<Parameter>
     }
 
     @Override
-    protected void addParameters(Set<Parameter> parameters) {
+    protected void addParameters(@Nonnull Set<Parameter> parameters) {
         parameters.add(this);
     }
 

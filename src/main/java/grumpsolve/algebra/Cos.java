@@ -3,23 +3,25 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
+
 import static grumpsolve.algebra.Expressions.*;
 
 @Immutable
 class Cos extends UnaryOperator {
 
-    static Expression cos(Expression e) {
+    static Expression cos(@Nonnull Expression e) {
         return e == ZERO ? ONE
                 : e instanceof Constant ? c(Math.cos(cv(e)))
                 : new Cos(e);
     }
 
-    public Cos(Expression e) {
+    public Cos(@Nonnull Expression e) {
         super(e);
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return Math.cos(e.evaluate(solution));
     }
 
@@ -29,7 +31,7 @@ class Cos extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Parameter p) {
         //-sin(e)da
         return neg(mult(sin(e), e.partialWithRespectTo(p)));
     }

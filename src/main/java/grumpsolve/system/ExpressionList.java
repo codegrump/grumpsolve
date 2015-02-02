@@ -4,19 +4,24 @@ import com.google.common.collect.ImmutableList;
 import grumpsolve.algebra.Expression;
 import grumpsolve.algebra.Parameter;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class ExpressionList {
 
-    public static ExpressionList from(Expression... e) {
-        return new ExpressionList(ImmutableList.copyOf(e));
+    public static ExpressionList from(@Nonnull Expression e, Expression... ex) {
+        ImmutableList<Expression> list = ImmutableList
+                .<Expression>builder().add(e)
+                .addAll(ImmutableList.copyOf(ex))
+                .build();
+        return new ExpressionList(list);
     }
 
     private final List<Expression> expressions;
 
-    private ExpressionList(List<Expression> expressions) {
+    private ExpressionList(@Nonnull List<Expression> expressions) {
         this.expressions = ImmutableList.copyOf(expressions);
     }
 

@@ -3,23 +3,25 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
+
 import static grumpsolve.algebra.Expressions.*;
 
 @Immutable
 class Sin extends UnaryOperator {
 
-    static Expression sin(Expression e) {
+    static Expression sin(@Nonnull Expression e) {
         return e == ZERO ? ZERO
                 : e instanceof Constant ? c(Math.sin(cv(e)))
                 : new Sin(e);
     }
 
-    private Sin(Expression e) {
+    private Sin(@Nonnull Expression e) {
         super(e);
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return Math.sin(e.evaluate(solution));
     }
 
@@ -29,7 +31,7 @@ class Sin extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Parameter p) {
         return mult(cos(e), e.partialWithRespectTo(p));
     }
 }

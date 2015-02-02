@@ -3,23 +3,25 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
+
 import static grumpsolve.algebra.Expressions.*;
 import static grumpsolve.algebra.Expressions.mult;
 
 @Immutable
 class ArcCos extends UnaryOperator {
 
-    static Expression arccos(Expression e) {
+    static Expression arccos(@Nonnull Expression e) {
         return e instanceof Constant ? c(Math.acos(cv(e)))
                 : new ArcCos(e);
     }
 
-    private ArcCos(Expression e) {
+    private ArcCos(@Nonnull Expression e) {
         super(e);
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return Math.acos(e.evaluate(solution));
     }
 
@@ -29,7 +31,7 @@ class ArcCos extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Parameter p) {
         Expression e2 = square(e);
         Expression de = e.partialWithRespectTo(p);
 

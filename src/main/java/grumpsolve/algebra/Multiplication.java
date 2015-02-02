@@ -3,12 +3,14 @@ package grumpsolve.algebra;
 import grumpsolve.Immutable;
 import grumpsolve.system.Solution;
 
+import javax.annotation.Nonnull;
+
 import static grumpsolve.algebra.Expressions.*;
 
 @Immutable
 class Multiplication extends BinaryOperator {
 
-    static Expression multiply(Expression l, Expression r) {
+    static Expression multiply(@Nonnull Expression l, @Nonnull Expression r) {
         return l == ZERO || r == ZERO ? ZERO
                 : l == ONE ? r
                 : r == ONE ? l
@@ -16,12 +18,12 @@ class Multiplication extends BinaryOperator {
                 : new Multiplication(l, r);
     }
 
-    private Multiplication(Expression l, Expression r) {
+    private Multiplication(@Nonnull Expression l, @Nonnull Expression r) {
         super(l, r);
     }
 
     @Override
-    public double evaluate(Solution solution) {
+    public double evaluate(@Nonnull Solution solution) {
         return l.evaluate(solution) * r.evaluate(solution);
     }
 
@@ -33,7 +35,7 @@ class Multiplication extends BinaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Parameter p) {
         Expression da = l.partialWithRespectTo(p);
         Expression db = r.partialWithRespectTo(p);
         //bda + adb

@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import grumpsolve.algebra.Parameter;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class Solution {
 
-    public static Solution zero(Set<Parameter> parameters) {
+    public static Solution zero(@Nonnull Set<Parameter> parameters) {
         final Map<Long, Double> parameterValues = new HashMap<>();
         for (Parameter p : parameters) {
             parameterValues.put(p.getId(), 0.0);
@@ -18,23 +19,23 @@ public class Solution {
         return new Solution(parameterValues);
     }
 
-    public static Builder from(Set<Parameter> parameters) {
+    public static Builder from(@Nonnull Set<Parameter> parameters) {
         return zero(parameters).builder();
     }
 
     private final Map<Long, Double> parameterValues;
     private final Set<Long> important;
 
-    public Solution(Map<Long, Double> parameterValues) {
+    public Solution(@Nonnull Map<Long, Double> parameterValues) {
         this(parameterValues, ImmutableSet.<Long>of());
     }
 
-    public Solution(Map<Long, Double> parameterValues, Set<Long> important) {
+    public Solution(@Nonnull Map<Long, Double> parameterValues, @Nonnull Set<Long> important) {
         this.parameterValues = ImmutableMap.copyOf(parameterValues);
         this.important = ImmutableSet.copyOf(important);
     }
 
-    public double get(Long parameterId) {
+    public double get(long parameterId) {
         check(parameterValues, parameterId);
         return parameterValues.get(parameterId);
     }
@@ -70,7 +71,7 @@ public class Solution {
             this.important = ImmutableSet.copyOf(important);
         }
 
-        public double add(Long parameterId, Double value) {
+        public double add(long parameterId, double value) {
             check(parameterValues, parameterId);
 
             double newValue = parameterValues.get(parameterId) + value;
@@ -84,7 +85,7 @@ public class Solution {
             return this;
         }
 
-        public double add(Parameter p, Double value) {
+        public double add(@Nonnull Parameter p, double value) {
             return add(p.getId(), value);
         }
 
