@@ -19,6 +19,10 @@ public final class Expressions {
         return Addition.add(c(l), c(r));
     }
 
+    public static Expression add(Expression l, Expression r, Expression rr) {
+        return add(Addition.add(l, r), rr);
+    }
+
     public static Expression arccos(Expression e) {
         return ArcCos.arccos(e);
     }
