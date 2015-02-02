@@ -18,6 +18,10 @@ public class Solution {
         return new Solution(parameterValues);
     }
 
+    public static Builder from(Set<Parameter> parameters) {
+        return zero(parameters).builder();
+    }
+
     private final Map<Long, Double> parameterValues;
     private final Set<Long> important;
 
