@@ -79,6 +79,10 @@ public class Solution {
             return newValue;
         }
 
+        public Builder set(@Nonnull Parameter p, double v) {
+            return set(p.getId(), v);
+        }
+
         public Builder set(long parameterId, double v) {
             check(parameterValues, parameterId);
             parameterValues.put(parameterId, v);
