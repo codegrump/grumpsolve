@@ -79,7 +79,7 @@ public class NewtonSolverTest {
     }
 
     @Test
-    public void pointOnATranslatedCircle_almostFullyConstrained() throws Exception {
+    public void pointOnATranslatedCircle_underConstrained() throws Exception {
         final ExpressionList expressions;
         {
             //center of circle at (5, 3.5)
