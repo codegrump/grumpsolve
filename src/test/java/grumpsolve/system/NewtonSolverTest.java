@@ -176,8 +176,9 @@ public class NewtonSolverTest {
 
             //sides of base must be aligned
             Expression e10 = sub(x1, x3);
+            Expression e11 = sub(x2, x4);
 
-            expressions = ExpressionList.from(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
+            expressions = ExpressionList.from(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
         }
 
         final Set<Parameter> parameters = expressions.parameters();
