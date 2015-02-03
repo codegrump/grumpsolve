@@ -1,0 +1,24 @@
+parallelogram := {
+
+    #initialize our points
+    p0 := point(-1, 1);
+    p1 := point(1, 1);
+    p2 := point(1, -1);
+    p3 := point(-1, -1);
+
+    #line segments to draw
+    s0 = segment(p0, p1)
+    s1 = segment(p1, p2)
+    s2 = segment(p2, p3)
+    s3 = segment(p3, p0)
+
+    #constraints
+    distance(p0, p1) = distance(p2,p3);
+    distance(p0, p3) = distance(p1, p2);
+};
+
+display_parellelogram := parellelogram {
+
+};
+
+DISPLAY display_parellelogram;

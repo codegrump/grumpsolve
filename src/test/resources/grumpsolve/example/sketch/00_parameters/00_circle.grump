@@ -1,0 +1,10 @@
+#will define x,y who are some radius away from the origin
+
+sketch ;
+
+const radius := PI ;
+
+declare x;
+declare y;
+
+square(x) + square(y) = square(radius);

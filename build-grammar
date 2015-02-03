@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd ${SCRIPT_DIR}
+
+#download antlr if needed
+.antlr/download.sh
+
+#run antlr against grump grammar
+pushd src/main/antlr
+rm -rf *.java *.tokens
+java -jar ${SCRIPT_DIR}/.antlr/*.jar Grump.g4
+
+#copy to src/main/java/grump with correct package
+for g in `ls Grump*java`
+do
+new_g=../java/grump/${g}
+echo 'package grump;' > ${new_g}
+cat ${g} >> ${new_g}
+done
+
+cp Grump.tokens ../java/grump
