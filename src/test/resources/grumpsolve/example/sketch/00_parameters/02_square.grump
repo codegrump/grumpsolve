@@ -1,0 +1,25 @@
+#defines x,y,z who are some radius away from the origin, except with an input parameter this time
+
+square extends sketch(cx, cy, width, height) {
+    
+    x0 := 0, y0 = 0;
+    x1 := 0, y1 = 1;
+    x2 := 1, y2 = 1;
+    x3 := 1, y3 = 0;
+    
+    x0 = x1;
+    x2 = x3;
+    y0 = y3;
+    y1 = y2;
+    
+    width = x2 - x0;
+    height = y1 - y0;
+    
+    cx = width / 2;
+    cy = height / 2;
+    
+}
+
+square1 = square(0, 0, 1, 1);
+square2 = square(0, 0, 2, 2);
+square3 = square(0, 0, 3, 3);

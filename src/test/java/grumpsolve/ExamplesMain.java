@@ -57,11 +57,11 @@ public class ExamplesMain {
                         });
                         System.out.println(file);
                         parser.grump();
-                        System.out.println();
+                        System.out.println(error.get() ? "error": "");
                         System.out.println();
                     }
                 }
-
+                
                 return error.get() ? FileVisitResult.TERMINATE : FileVisitResult.CONTINUE;
             }
         });

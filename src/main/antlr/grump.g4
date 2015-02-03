@@ -1,51 +1,84 @@
 grammar Grump;
 
-grump : sketchHeader? sketchBody? EOF;
-    
-sketchHeader : SKETCH SEMI;
-sketchBody : sketchLine+;
-sketchLine
-    : constLine SEMI
-    | declareLine SEMI
-    | constraintLineNumeric SEMI
+literal
+    : IntegerLiteral
+    | FloatingPointLiteral
     ;
 
-constLine
-    : CONST constAssignment ( COMMA constAssignment ) * 
-    ;
-constAssignment
-    : Symbol ASSIGN numericExpression
-    | Symbol ASSIGN pointExpression
-    ;
-declareLine
-    : DECLARE Symbol ( COMMA Symbol )*
-    ;
-constraintLineNumeric
-    : numericExpression EQUALS numericExpression
+grump : statements? /* display? */ EOF;
+
+statements
+    : statement+
     ;
 
-pointExpression
-    : pointLiteral
-    | Symbol
-    | LPAREN pointExpression RPAREN
-    | pointExpression ( ADD | SUB ) 
-    | pointExpression ( MUL | DIV ) numericExpression
-    | numericExpression ( MUL | DIV ) pointExpression
+statement 
+    : defineStatement
+    | parameterStatement
+    | constraintStatement
+    | sketchStatement
     ;
     
-pointLiteral
-    : LBRACK numericExpression COMMA numericExpression RBRACK
+defineStatement
+    : DEFINE Symbol EXTENDS ( Symbol | SKETCH ) parameters? defineBlock? SEMI
+    ;
+    
+defineBlock
+    : LBRACE statements? RBRACE
     ;
 
-numericExpression
-    : numericConstant
-    | Symbol
-    | LPAREN numericExpression RPAREN
-//    | '-' NUMERIC_CONSTANT_EXPRESSION
-    | numericExpression ( ADD | SUB ) numericExpression
-    | numericExpression ( MUL | DIV ) numericExpression
-    | ( SQUARE | SQRT ) LPAREN numericExpression RPAREN
+parameterStatement
+    : CONSTANT? PARAMETER parameterAssignment ( COMMA parameterAssignment )* SEMI
     ;
+    
+parameterAssignment
+    : Symbol (ASSIGN expression)?
+    ;
+   
+constraintStatement 
+    : CONSTRAINT (Symbol ASSIGN)? anonymousConstraint  SEMI
+    ;
+    
+anonymousConstraint
+    : constraintExpression EQUALS constraintExpression
+    ;
+
+constraintExpression
+    : expression
+    ;
+    
+sketchStatement
+    : SKETCH sketchAssignment SEMI
+    ;
+    
+sketchAssignment
+    : Symbol ASSIGN Symbol arguments defineBlock?
+    ;
+
+expressions
+    : expression ( COMMA expression )*
+    ;
+
+expression
+    : literal
+    | reference
+    | LPAREN expression RPAREN
+    | expression ( ADD | SUB ) expression
+    | expression ( MUL | DIV ) expression
+    | ( SQUARE | SQRT | SIN | COS | ASIN | ACOS ) LPAREN expression RPAREN
+    ;
+
+parameters 
+    : LPAREN symbols? RPAREN
+    ;
+    
+arguments
+    : LPAREN expressions ? RPAREN
+    ;
+    
+//pointLiteral
+//    : LBRACK numericExpression COMMA numericExpression RBRACK
+//    ;
+
     
 numericConstant
     : PI
@@ -53,13 +86,38 @@ numericConstant
     | IntegerLiteral
     | FloatingPointLiteral
     ;
+    
+//display
+//    : DISPLAY symbols? SEMI
+//    ;
 
-SKETCH          : 'sketch';
-CONST           : 'const';
+reference
+    : Symbol ( DOT Symbol )*
+    ;
+
+
+symbols
+    : Symbol ( COMMA Symbol )*
+    ;
+
+CONSTANT        : 'constant';
+CONSTRAINT      : 'constraint';
 DECLARE         : 'declare';
+DEFINE          : 'define';
+DISPLAY         : 'display';
+PARAMETER       : 'parameter';
+POINT          : 'point';
+EQUATION        : 'equation';
+EXPRESSION      : 'expression';
+EXTENDS         : 'extends';
+SKETCH          : 'sketch';
 
 SQUARE          : 'square';
 SQRT            : 'sqrt';
+SIN             : 'sin';
+COS             : 'cos';
+ASIN            : 'asin';
+ACOS            : 'acos';
 
 PI              : 'PI';
 GOLDEN_RATIO    : 'GOLDEN_RATIO';
