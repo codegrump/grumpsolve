@@ -1,0 +1,14 @@
+#will define x,y who are some radius away from the origin
+
+sketch ;
+
+const radius := 2 * PI ;
+
+# these are seeds
+# x, y, z are not actually constrained to be these values
+x := 1;
+y := 1;
+z := 1;
+
+
+square(x) + square(y) + square(z) = square(radius);

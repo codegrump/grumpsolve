@@ -1,10 +1,21 @@
 #will define x,y who are some radius away from the origin
 
-sketch ;
+xy = sketch {
+    const radius := 2.0 ;
+    
+    #declares these variables, seeds them with some random value
+    declare x, y;
+    
+    square(x) + square(y) = square(radius);
+};
 
-const radius := PI ;
+pointOnCircle = circle {
+    x = 2 * y
+};
 
-declare x;
-declare y;
+display pointOnCircle;
 
-square(x) + square(y) = square(radius);
+
+
+
+

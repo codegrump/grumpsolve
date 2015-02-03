@@ -5,19 +5,36 @@ grump : sketchHeader? sketchBody? EOF;
 sketchHeader : SKETCH SEMI;
 sketchBody : sketchLine+;
 sketchLine
-    : constLineNumeric
-    | declareLine
-    | constraintLineNumeric
+    : constLine SEMI
+    | declareLine SEMI
+    | constraintLineNumeric SEMI
     ;
 
-constLineNumeric
-    : CONST Symbol ASSIGN numericExpression SEMI
+constLine
+    : CONST constAssignment ( COMMA constAssignment ) * 
+    ;
+constAssignment
+    : Symbol ASSIGN numericExpression
+    | Symbol ASSIGN pointExpression
     ;
 declareLine
-    : DECLARE Symbol SEMI
+    : DECLARE Symbol ( COMMA Symbol )*
     ;
 constraintLineNumeric
-    : numericExpression EQUALS numericExpression SEMI
+    : numericExpression EQUALS numericExpression
+    ;
+
+pointExpression
+    : pointLiteral
+    | Symbol
+    | LPAREN pointExpression RPAREN
+    | pointExpression ( ADD | SUB ) 
+    | pointExpression ( MUL | DIV ) numericExpression
+    | numericExpression ( MUL | DIV ) pointExpression
+    ;
+    
+pointLiteral
+    : LBRACK numericExpression COMMA numericExpression RBRACK
     ;
 
 numericExpression
@@ -33,6 +50,8 @@ numericExpression
 numericConstant
     : PI
     | GOLDEN_RATIO
+    | IntegerLiteral
+    | FloatingPointLiteral
     ;
 
 SKETCH          : 'sketch';
@@ -44,14 +63,218 @@ SQRT            : 'sqrt';
 
 PI              : 'PI';
 GOLDEN_RATIO    : 'GOLDEN_RATIO';
+    
 
-Symbol : LETTER LETTER_OR_NUMBER* ;
+//Integer Literals
+
+IntegerLiteral
+	:	DecimalIntegerLiteral
+	|	HexIntegerLiteral
+	|	OctalIntegerLiteral
+	|	BinaryIntegerLiteral
+	;
 
 fragment
-LETTER          : [a-zA-Z$_];
+DecimalIntegerLiteral
+	:	DecimalNumeral IntegerTypeSuffix?
+	;
 
 fragment
-LETTER_OR_NUMBER : [a-zA-Z0-9$_];
+HexIntegerLiteral
+	:	HexNumeral IntegerTypeSuffix?
+	;
+
+fragment
+OctalIntegerLiteral
+	:	OctalNumeral IntegerTypeSuffix?
+	;
+
+fragment
+BinaryIntegerLiteral
+	:	BinaryNumeral IntegerTypeSuffix?
+	;
+
+fragment
+IntegerTypeSuffix
+	:	[lL]
+	;
+
+fragment
+DecimalNumeral
+	:	'0'
+	|	NonZeroDigit (Digits? | Underscores Digits)
+	;
+
+fragment
+Digits
+	:	Digit (DigitsAndUnderscores? Digit)?
+	;
+
+fragment
+Digit
+	:	'0'
+	|	NonZeroDigit
+	;
+
+fragment
+NonZeroDigit
+	:	[1-9]
+	;
+
+fragment
+DigitsAndUnderscores
+	:	DigitOrUnderscore+
+	;
+
+fragment
+DigitOrUnderscore
+	:	Digit
+	|	'_'
+	;
+
+fragment
+Underscores
+	:	'_'+
+	;
+
+fragment
+HexNumeral
+	:	'0' [xX] HexDigits
+	;
+
+fragment
+HexDigits
+	:	HexDigit (HexDigitsAndUnderscores? HexDigit)?
+	;
+
+fragment
+HexDigit
+	:	[0-9a-fA-F]
+	;
+
+fragment
+HexDigitsAndUnderscores
+	:	HexDigitOrUnderscore+
+	;
+
+fragment
+HexDigitOrUnderscore
+	:	HexDigit
+	|	'_'
+	;
+
+fragment
+OctalNumeral
+	:	'0' Underscores? OctalDigits
+	;
+
+fragment
+OctalDigits
+	:	OctalDigit (OctalDigitsAndUnderscores? OctalDigit)?
+	;
+
+fragment
+OctalDigit
+	:	[0-7]
+	;
+
+fragment
+OctalDigitsAndUnderscores
+	:	OctalDigitOrUnderscore+
+	;
+
+fragment
+OctalDigitOrUnderscore
+	:	OctalDigit
+	|	'_'
+	;
+
+fragment
+BinaryNumeral
+	:	'0' [bB] BinaryDigits
+	;
+
+fragment
+BinaryDigits
+	:	BinaryDigit (BinaryDigitsAndUnderscores? BinaryDigit)?
+	;
+
+fragment
+BinaryDigit
+	:	[01]
+	;
+
+fragment
+BinaryDigitsAndUnderscores
+	:	BinaryDigitOrUnderscore+
+	;
+
+fragment
+BinaryDigitOrUnderscore
+	:	BinaryDigit
+	|	'_'
+	;
+
+//Floating-Point Literals
+
+FloatingPointLiteral
+	:	DecimalFloatingPointLiteral
+	|	HexadecimalFloatingPointLiteral
+	;
+
+fragment
+DecimalFloatingPointLiteral
+	:	Digits '.' Digits? ExponentPart? FloatTypeSuffix?
+	|	'.' Digits ExponentPart? FloatTypeSuffix?
+	|	Digits ExponentPart FloatTypeSuffix?
+	|	Digits FloatTypeSuffix
+	;
+
+fragment
+ExponentPart
+	:	ExponentIndicator SignedInteger
+	;
+
+fragment
+ExponentIndicator
+	:	[eE]
+	;
+
+fragment
+SignedInteger
+	:	Sign? Digits
+	;
+
+fragment
+Sign
+	:	[+-]
+	;
+
+fragment
+FloatTypeSuffix
+	:	[fFdD]
+	;
+
+fragment
+HexadecimalFloatingPointLiteral
+	:	HexSignificand BinaryExponent FloatTypeSuffix?
+	;
+
+fragment
+HexSignificand
+	:	HexNumeral '.'?
+	|	'0' [xX] HexDigits? '.' HexDigits
+	;
+
+fragment
+BinaryExponent
+	:	BinaryExponentIndicator SignedInteger
+	;
+
+fragment
+BinaryExponentIndicator
+	:	[pP]
+	;
 
 LPAREN          : '(';
 RPAREN          : ')';
@@ -69,6 +292,14 @@ ADD             : '+';
 SUB             : '-';
 MUL             : '*';
 DIV             : '/';
+
+Symbol : LETTER LETTER_OR_NUMBER* ;
+
+fragment
+LETTER          : [a-zA-Z$_];
+
+fragment
+LETTER_OR_NUMBER : [a-zA-Z0-9$_];
 
 WS  :  [ \t\r\n\u000C]+ -> skip
     ;
