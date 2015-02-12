@@ -1,65 +1,99 @@
 grammar Grump;
 
-literal
-    : IntegerLiteral
-    | FloatingPointLiteral
-    ;
+//statement containers
+grump : topLevelStatements? EOF;
 
-grump : statements? /* display? */ EOF;
-
-statements
-    : statement+
-    ;
-
-statement 
-    : defineStatement
-    | parameterStatement
-    | constraintStatement
-    | sketchStatement
-    ;
-    
-defineStatement
-    : DEFINE Symbol EXTENDS ( Symbol | SKETCH ) parameters? defineBlock? SEMI
-    ;
-    
 defineBlock
     : LBRACE statements? RBRACE
     ;
 
-parameterStatement
-    : CONSTANT? PARAMETER parameterAssignment ( COMMA parameterAssignment )* SEMI
+constructor
+    : CONSTRUCTOR parameters? LBRACE constructorStatments? RBRACE
+    ;
+
+//collections of statements
+topLevelStatements
+    : topLevelStatement+
+    ;
+
+statements
+    : statement+
     ;
     
-parameterAssignment
-    : Symbol (ASSIGN expression)?
+constructorStatments
+    : constructorStatement+
     ;
-   
+
+//individual statements
+statement
+    : constructor
+    | topLevelStatement
+    ;
+    
+topLevelStatement 
+    : defineStatement
+    | parameterStatement
+    | sketchStatement
+    | constraintStatement
+    ;
+
+constructorStatement
+    : parameterStatement
+    | sketchStatement
+    | constraintStatement
+    ;
+
+defineStatement
+    : DEFINE Symbol EXTENDS defineType defineBlock? SEMI
+    ;
+
 constraintStatement 
-    : CONSTRAINT (Symbol ASSIGN)? anonymousConstraint  SEMI
+    : CONSTRAINT constraintAssignment ( COMMA constraintAssignment )*  SEMI
+    ;
+
+sketchStatement
+    : sketchType sketchAssignment ( COMMA sketchAssignment )* SEMI
+    ;    
+    
+parameterStatement
+    : CONSTANT? PARAMETER parameterAssignment ( COMMA parameterAssignment )* SEMI
+    ;    
+
+//assignments
+   
+constraintAssignment
+    : (Symbol ASSIGN)? anonymousConstraint
     ;
     
 anonymousConstraint
     : constraintExpression EQUALS constraintExpression
     ;
 
-constraintExpression
-    : expression
-    ;
-    
-sketchStatement
-    : SKETCH sketchAssignment SEMI
-    ;
-    
 sketchAssignment
-    : Symbol ASSIGN Symbol arguments defineBlock?
+    : Symbol (ASSIGN Symbol arguments? defineBlock?)?
+    ;
+    
+parameterAssignment
+    : Symbol (ASSIGN expression)?
+    ;
+  
+//collections of expressions
+arguments
+    : LPAREN expressions ? RPAREN
     ;
 
 expressions
     : expression ( COMMA expression )*
     ;
 
+//individual expressions
+constraintExpression
+    : expression
+    | DISTANCE LPAREN expression COMMA expression RPAREN
+    ;
+
 expression
-    : literal
+    : constant
     | reference
     | LPAREN expression RPAREN
     | expression ( ADD | SUB ) expression
@@ -67,50 +101,69 @@ expression
     | ( SQUARE | SQRT | SIN | COS | ASIN | ACOS ) LPAREN expression RPAREN
     ;
 
+//parameters
 parameters 
-    : LPAREN symbols? RPAREN
+    : LPAREN ( parameter ( COMMA parameter)* )? RPAREN
     ;
-    
-arguments
-    : LPAREN expressions ? RPAREN
-    ;
-    
-//pointLiteral
-//    : LBRACK numericExpression COMMA numericExpression RBRACK
-//    ;
 
-    
-numericConstant
-    : PI
-    | GOLDEN_RATIO
-    | IntegerLiteral
-    | FloatingPointLiteral
+parameter
+    : parameterType Symbol
+    ;
+
+//types
+defineType
+    : Symbol
+    | builtin
+    ; 
+
+parameterType
+    : PARAMETER
+    | sketchType
+    ;
+
+sketchType
+    : Symbol
+    | builtin
+    ;
+
+builtin
+    : SKETCH
+    | POINT
     ;
     
-//display
-//    : DISPLAY symbols? SEMI
-//    ;
+constant
+    : IntegerLiteral
+    | FloatingPointLiteral
+    | PI
+    | GOLDEN_RATIO
+    ;
 
 reference
     : Symbol ( DOT Symbol )*
     ;
 
-
 symbols
     : Symbol ( COMMA Symbol )*
     ;
+    
+
+
+SKETCH          : 'Sketch';
+POINT           : 'Point';
+
+DISTANCE        : 'distance';
 
 CONSTANT        : 'constant';
 CONSTRAINT      : 'constraint';
+CONSTRUCTOR     : 'constructor';
 DECLARE         : 'declare';
 DEFINE          : 'define';
 DISPLAY         : 'display';
 PARAMETER       : 'parameter';
-POINT          : 'point';
+
 EQUATION        : 'equation';
 EXPRESSION      : 'expression';
 EXTENDS         : 'extends';
-SKETCH          : 'sketch';
 
 SQUARE          : 'square';
 SQRT            : 'sqrt';

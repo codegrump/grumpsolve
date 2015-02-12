@@ -1,0 +1,14 @@
+define xy extends Sketch {
+    constant parameter radius := 2.0;
+    parameter x, y;
+    constraint square(x) + square(y) = square(radius);
+};
+
+Sketch p0;
+Sketch p1 := xy {
+    constraint x = 2 * y; 
+};
+Sketch p2 := xy {
+    constraint x = p0.x;
+    constraint y = p1.y;
+};
