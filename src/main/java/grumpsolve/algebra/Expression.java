@@ -26,12 +26,12 @@ public abstract class Expression {
     abstract boolean isConstant();
 
     static double cv(Expression e) {
-        return ((Constant) e).getV();
+        return ((Algebra.Constant) e).getV();
     }
 
 
-    private static Set<Class> excludeParens = ImmutableSet.<Class>of(ArcCos.class, ArcSin.class,
-            Constant.class, Cos.class, Parameter.class, Sin.class, SquareRoot.class);
+    private static Set<Class> excludeParens = ImmutableSet.<Class>of(Algebra.ArcCos.class, Algebra.ArcSin.class,
+            Algebra.Constant.class, Algebra.Cos.class, Parameter.class, Algebra.Sin.class, Algebra.SquareRoot.class);
 
     static String toStringWithOptionalParens(Expression e) {
         return excludeParens.contains(e.getClass())

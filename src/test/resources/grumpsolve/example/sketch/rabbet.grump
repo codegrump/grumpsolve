@@ -1,0 +1,6 @@
+float width = domain(0.0, MAX_DOUBLE) default 10.0, #width and height are specified parameters
+      height = domain (0.0, MAX_DOUBLE) default 10.0,  #x0, x1, y0, y1 are derived parameters, hence are not solved
+      x1 = width/2.0,
+      x0 = -x1,
+      y1 = height/2.0,
+      y0 = -y1;

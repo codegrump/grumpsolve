@@ -18,28 +18,28 @@ public class AdditionTest {
 
     @Test
     public void addWithZeroOnRight() throws Exception {
-        Expression expression = Addition.add(x0, ZERO);
+        Expression expression = Algebra.Addition.add(x0, ZERO);
         assertSame(x0, expression);
     }
 
     @Test
     public void addWithZeroOnLeft() throws Exception {
-        Expression expression = Addition.add(ZERO, x0);
+        Expression expression = Algebra.Addition.add(ZERO, x0);
         assertSame(x0, expression);
     }
 
     @Test
     public void addTwoConstants() throws Exception {
-        Expression expression = Addition.add(ONE, HALF);
+        Expression expression = Algebra.Addition.add(ONE, HALF);
         assertTrue(expression.isConstant());
         assertEquals(1.5, cv(expression), 0.0);
     }
 
     @Test
     public void addTwoExpressions() throws Exception {
-        Expression expression = Addition.add(x0, x1);
-        assertTrue(expression instanceof Addition);
-        BinaryOperator o = (BinaryOperator) expression;
+        Expression expression = Algebra.Addition.add(x0, x1);
+        assertTrue(expression instanceof Algebra.Addition);
+        Algebra.BinaryOperator o = (Algebra.BinaryOperator) expression;
         assertSame(x0, o.l);
         assertSame(x1, o.r);
         assertEquals("x0+x1", expression.toString());
@@ -47,7 +47,7 @@ public class AdditionTest {
 
     @Test
      public void evaluate() throws Exception {
-        Expression expression = Addition.add(x0, x1);
+        Expression expression = Algebra.Addition.add(x0, x1);
         assertEquals(3.0, expression.evaluate(SOLUTION_1_2), 0.0);
         assertEquals(7.0, expression.evaluate(SOLUTION_3_4), 0.0);
     }
@@ -55,12 +55,12 @@ public class AdditionTest {
     @Test
     public void partialWithRespectTo() throws Exception {
         {
-            Expression expression = Addition.add(x0, ONE);
+            Expression expression = Algebra.Addition.add(x0, ONE);
             assertSame(ONE, expression.partialWithRespectTo(x0));
             assertSame(ZERO, expression.partialWithRespectTo(x1));
         }
         {
-            Expression expression = Addition.add(ONE, x0);
+            Expression expression = Algebra.Addition.add(ONE, x0);
             assertSame(ONE, expression.partialWithRespectTo(x0));
             assertSame(ZERO, expression.partialWithRespectTo(x1));
         }

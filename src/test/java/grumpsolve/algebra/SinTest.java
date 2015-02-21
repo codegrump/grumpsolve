@@ -18,35 +18,35 @@ public class SinTest {
 
     @Test
     public void sinZero() throws Exception {
-        Expression expression = Sin.sin(ZERO);
+        Expression expression = Algebra.Sin.sin(ZERO);
         assertSame(ZERO, expression);
     }
 
     @Test
     public void constant() throws Exception {
-        Expression expression = Sin.sin(ONE);
+        Expression expression = Algebra.Sin.sin(ONE);
         assertTrue(expression.isConstant());
         assertEquals(Math.sin(1.0), cv(expression), 1.0e-12);
     }
 
     @Test
     public void parameter() throws Exception {
-        Expression expression = Sin.sin(x0);
-        assertTrue(expression instanceof Sin);
-        UnaryOperator o = (UnaryOperator) expression;
+        Expression expression = Algebra.Sin.sin(x0);
+        assertTrue(expression instanceof Algebra.Sin);
+        Algebra.UnaryOperator o = (Algebra.UnaryOperator) expression;
         assertSame(x0, o.e);
         assertEquals("sin(x0)", expression.toString());
     }
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Sin.sin(x0);
+        Expression expression = Algebra.Sin.sin(x0);
         assertEquals(Math.sin(3.0), expression.evaluate(SOLUTION_3_4), 1.0e-12);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = Sin.sin(x0);
+        Expression expression = Algebra.Sin.sin(x0);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("cos(x0)", partial.toString());

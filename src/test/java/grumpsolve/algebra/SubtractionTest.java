@@ -22,27 +22,27 @@ public class SubtractionTest {
 
     @Test
     public void subtractZero() throws Exception {
-        Expression expression = Subtraction.subtract(x0, ZERO);
+        Expression expression = Algebra.Subtraction.subtract(x0, ZERO);
         assertSame(x0, expression);
     }
 
     @Test
     public void subtractFromZero() throws Exception {
-        Expression expression = Subtraction.subtract(ZERO, x0);
+        Expression expression = Algebra.Subtraction.subtract(ZERO, x0);
         assertEquals("-x0", expression.toString());
     }
 
     @Test
     public void subtractConstants() throws Exception {
-        Expression expression = Subtraction.subtract(ONE, HALF);
+        Expression expression = Algebra.Subtraction.subtract(ONE, HALF);
         assertSame(HALF, expression);
     }
 
     @Test
     public void subtractTwoExpressions() throws Exception {
-        Expression expression = Subtraction.subtract(x0, x1);
-        assertTrue(expression instanceof Subtraction);
-        BinaryOperator o = (BinaryOperator) expression;
+        Expression expression = Algebra.Subtraction.subtract(x0, x1);
+        assertTrue(expression instanceof Algebra.Subtraction);
+        Algebra.BinaryOperator o = (Algebra.BinaryOperator) expression;
         assertSame(x0, o.l);
         assertSame(x1, o.r);
         assertEquals("x0-x1", expression.toString());
@@ -50,7 +50,7 @@ public class SubtractionTest {
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Subtraction.subtract(x0, x1);
+        Expression expression = Algebra.Subtraction.subtract(x0, x1);
         assertEquals(-1.0, expression.evaluate(SOLUTION_1_2), 0.0);
         assertEquals(-1.0, expression.evaluate(SOLUTION_3_4), 0.0);
     }
@@ -58,12 +58,12 @@ public class SubtractionTest {
     @Test
     public void partialWithRespectTo() throws Exception {
         {
-            Expression expression = Subtraction.subtract(x0, ONE);
+            Expression expression = Algebra.Subtraction.subtract(x0, ONE);
             assertSame(ONE, expression.partialWithRespectTo(x0));
             assertSame(ZERO, expression.partialWithRespectTo(x1));
         }
         {
-            Expression expression = Subtraction.subtract(ONE, x0);
+            Expression expression = Algebra.Subtraction.subtract(ONE, x0);
             assertEquals(-1.0, cv(expression.partialWithRespectTo(x0)), 0.0);
             assertSame(ZERO, expression.partialWithRespectTo(x1));
         }

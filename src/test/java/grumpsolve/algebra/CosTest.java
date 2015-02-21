@@ -18,34 +18,34 @@ public class CosTest {
 
     @Test
     public void cosZero() throws Exception {
-        Expression expression = Cos.cos(ZERO);
+        Expression expression = Algebra.Cos.cos(ZERO);
         assertSame(ONE, expression);
     }
 
     @Test
     public void constant() throws Exception {
-        Expression expression = Cos.cos(ONE);
+        Expression expression = Algebra.Cos.cos(ONE);
         assertTrue(expression.isConstant());
         assertEquals(Math.cos(1.0), cv(expression), 1.0e-12);
     }
 
     @Test
     public void parameter() throws Exception {
-        Expression expression = Cos.cos(x0);
-        assertTrue(expression instanceof Cos);
-        UnaryOperator o = (UnaryOperator) expression;
+        Expression expression = Algebra.Cos.cos(x0);
+        assertTrue(expression instanceof Algebra.Cos);
+        Algebra.UnaryOperator o = (Algebra.UnaryOperator) expression;
         assertSame(x0, o.e);
     }
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Cos.cos(x0);
+        Expression expression = Algebra.Cos.cos(x0);
         assertEquals(Math.cos(3.0), expression.evaluate(SOLUTION_3_4), 1.0e-12);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = Cos.cos(x0);
+        Expression expression = Algebra.Cos.cos(x0);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("-sin(x0)", partial.toString());

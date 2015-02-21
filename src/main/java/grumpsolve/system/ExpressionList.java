@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 public class ExpressionList {
 
@@ -17,6 +18,10 @@ public class ExpressionList {
                 .addAll(ImmutableList.copyOf(ex))
                 .build();
         return new ExpressionList(list);
+    }
+
+    public static ExpressionList from(List<Expression> expressions) {
+        return new ExpressionList(expressions);
     }
 
     private final List<Expression> expressions;

@@ -1,0 +1,14 @@
+float base = domain(0.0, INF) default 10,
+      top  = domain(0.0, INF) default 5,
+      topOffset = default 0,
+      area = domain(0.0, INF) default square(top) * base / 2.0,
+      height;
+
+constraint area = height * (base + top) / 2; #implicit solvable parameter called height
+
+# new LinearRing.Builder()
+#    .point([0.0, 0.0])
+#    .point([topOffset, height])
+#    .point([topOffset+top, height])
+#    .point([base, 0.0])
+#    .backToStart()

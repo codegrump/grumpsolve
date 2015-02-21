@@ -10,6 +10,13 @@
     
     <dependencies>
         <dependency>
+            <groupId>lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>3.0.x</version>
+            <systemPath>${project.basedir}/lib/lwjgl.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>18.0</version>

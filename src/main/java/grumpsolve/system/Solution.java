@@ -8,19 +8,20 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Solution {
 
-    public static Solution zero(@Nonnull Set<Parameter> parameters) {
+    public static Solution zero(@Nonnull Set<Long> parameterIds) {
         final Map<Long, Double> parameterValues = new HashMap<>();
-        for (Parameter p : parameters) {
-            parameterValues.put(p.getId(), 0.0);
+        for (Long id : parameterIds) {
+            parameterValues.put(id, 0.0);
         }
         return new Solution(parameterValues);
     }
 
     public static Builder from(@Nonnull Set<Parameter> parameters) {
-        return zero(parameters).builder();
+        return zero(parameters.stream().map(Parameter::getId).collect(Collectors.toSet())).builder();
     }
 
     private final Map<Long, Double> parameterValues;

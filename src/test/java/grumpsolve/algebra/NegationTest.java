@@ -17,33 +17,33 @@ public class NegationTest {
 
     @Test
     public void negateZero() throws Exception {
-        Expression expression = Negation.negate(ZERO);
+        Expression expression = Algebra.Negation.negate(ZERO);
         assertSame(ZERO, expression);
     }
 
     @Test
     public void negateConstant() throws Exception {
-        Expression expression = Negation.negate(ONE);
+        Expression expression = Algebra.Negation.negate(ONE);
         assertTrue(expression.isConstant());
         assertEquals(-1.0, cv(expression), 0.0);
     }
 
     @Test
     public void negateExpression() throws Exception {
-        Expression expression = Negation.negate(x0);
-        assertTrue(expression instanceof Negation);
+        Expression expression = Algebra.Negation.negate(x0);
+        assertTrue(expression instanceof Algebra.Negation);
         assertEquals("-x0", expression.toString());
     }
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Negation.negate(x0);
+        Expression expression = Algebra.Negation.negate(x0);
         assertEquals(-3.0, expression.evaluate(SOLUTION_3), 0.0);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = Negation.negate(x0);
+        Expression expression = Algebra.Negation.negate(x0);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("-1.0", partial.toString());

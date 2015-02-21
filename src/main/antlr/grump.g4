@@ -1,180 +1,169 @@
 grammar Grump;
 
 //statement containers
-grump : topLevelStatements? EOF;
+grump : topLevelStatements EOF;
 
-defineBlock
-    : LBRACE statements? RBRACE
-    ;
-
-constructor
-    : CONSTRUCTOR parameters? LBRACE constructorStatments? RBRACE
-    ;
 
 //collections of statements
 topLevelStatements
-    : topLevelStatement+
+    : topLevelStatement*
     ;
 
-statements
-    : statement+
-    ;
-    
-constructorStatments
-    : constructorStatement+
-    ;
-
-//individual statements
-statement
-    : constructor
-    | topLevelStatement
-    ;
-    
 topLevelStatement 
-    : defineStatement
-    | parameterStatement
-    | sketchStatement
-    | constraintStatement
-    ;
-
-constructorStatement
     : parameterStatement
-    | sketchStatement
     | constraintStatement
     ;
 
-defineStatement
-    : DEFINE Symbol EXTENDS defineType defineBlock? SEMI
-    ;
-
-constraintStatement 
-    : CONSTRAINT constraintAssignment ( COMMA constraintAssignment )*  SEMI
-    ;
-
-sketchStatement
-    : sketchType sketchAssignment ( COMMA sketchAssignment )* SEMI
-    ;    
-    
 parameterStatement
-    : CONSTANT? PARAMETER parameterAssignment ( COMMA parameterAssignment )* SEMI
-    ;    
+    : FLOAT parameterAssignment ( COMMA parameterAssignment )* SEMI
+    ;
 
+constraintStatement
+    : CONSTRAINT constraint ( COMMA constraint )*  SEMI
+    ;
+    
 //assignments
-   
-constraintAssignment
-    : (Symbol ASSIGN)? anonymousConstraint
+parameterAssignment
+    : Symbol (EQUALS (expression | domain))?
     ;
     
-anonymousConstraint
-    : constraintExpression EQUALS constraintExpression
+constraint
+    : expression ( EQUALS expression )+
     ;
 
-sketchAssignment
-    : Symbol (ASSIGN Symbol arguments? defineBlock?)?
+//individual expressions
+domain
+    : domainInterval defaultValue?
+    | defaultValue
     ;
     
-parameterAssignment
-    : Symbol (ASSIGN expression)?
+domainInterval
+    : DOMAIN (LPAREN | LBRACK) minExpression COMMA maxExpression (RPAREN | RBRACK)
     ;
-  
-//collections of expressions
-arguments
-    : LPAREN expressions ? RPAREN
+    
+defaultValue
+    : DEFAULT expression
+    ;
+
+minExpression
+    : expression
+    ;
+
+maxExpression
+    : expression
     ;
 
 expressions
     : expression ( COMMA expression )*
     ;
 
-//individual expressions
-constraintExpression
-    : expression
-    | DISTANCE LPAREN expression COMMA expression RPAREN
+expression
+    : expressionTerm
+    | expression (MUL | DIV) expression
+    | expression (ADD | SUB) expression
+    | negationExpression
+    | functionInvocation
     ;
 
-expression
+expressionTerm
     : constant
     | reference
-    | LPAREN expression RPAREN
-    | expression ( ADD | SUB ) expression
-    | expression ( MUL | DIV ) expression
-    | ( SQUARE | SQRT | SIN | COS | ASIN | ACOS ) LPAREN expression RPAREN
+    | enclosedExpression
+    ;
+    
+enclosedExpression
+    : LPAREN expression RPAREN
+    ;
+
+negationExpression
+    : SUB expressionTerm
+    ;
+    
+functionInvocation
+    : Symbol arguments
+    ;
+
+arguments
+    : LPAREN expressions ? RPAREN
     ;
 
 //parameters
-parameters 
-    : LPAREN ( parameter ( COMMA parameter)* )? RPAREN
-    ;
+//parameters
+//    : LPAREN ( parameter ( COMMA parameter)* )? RPAREN
+//    ;
 
-parameter
-    : parameterType Symbol
-    ;
+//parameter
+//    : parameterType Symbol
+//    ;
 
 //types
-defineType
-    : Symbol
-    | builtin
-    ; 
+//defineType
+//    : Symbol
+//    | builtin
+//    ;
 
-parameterType
-    : PARAMETER
-    | sketchType
-    ;
+//parameterType
+//    : PARAMETER
+//    | sketchType
+//    ;
 
-sketchType
-    : Symbol
-    | builtin
-    ;
+//sketchType
+//    : Symbol
+//    | builtin
+//    ;
 
-builtin
-    : SKETCH
-    | POINT
-    ;
+//builtin
+//    : SKETCH
+//    | POINT
+//    ;
     
 constant
     : IntegerLiteral
     | FloatingPointLiteral
     | PI
     | GOLDEN_RATIO
+    | MAX_DOUBLE
+    | MIN_DOUBLE
     ;
 
-reference
-    : Symbol ( DOT Symbol )*
-    ;
-
-symbols
-    : Symbol ( COMMA Symbol )*
-    ;
+//symbols
+//    : Symbol ( COMMA Symbol )*
+//    ;
     
 
+FLOAT           : 'float';
+INT             : 'int';
 
-SKETCH          : 'Sketch';
-POINT           : 'Point';
+//DISTANCE        : 'distance';
 
-DISTANCE        : 'distance';
-
-CONSTANT        : 'constant';
 CONSTRAINT      : 'constraint';
-CONSTRUCTOR     : 'constructor';
-DECLARE         : 'declare';
-DEFINE          : 'define';
-DISPLAY         : 'display';
-PARAMETER       : 'parameter';
+//CONSTRUCTOR     : 'constructor';
+DEFAULT         : 'default';
+//DECLARE         : 'declare';
+//DEFINE          : 'define';
+//DISPLAY         : 'display';
+DOMAIN          : 'domain';
+//PARAMETER       : 'parameter';
 
-EQUATION        : 'equation';
-EXPRESSION      : 'expression';
-EXTENDS         : 'extends';
+//EQUATION        : 'equation';
+//EXPRESSION      : 'expression';
+//EXTENDS         : 'extends';
 
-SQUARE          : 'square';
-SQRT            : 'sqrt';
-SIN             : 'sin';
-COS             : 'cos';
-ASIN            : 'asin';
-ACOS            : 'acos';
+//SQUARE          : 'square';
+//SQRT            : 'sqrt';
+//SIN             : 'sin';
+//COS             : 'cos';
+//ASIN            : 'asin';
+//ACOS            : 'acos';
 
+MAX_DOUBLE      : 'MAX_DOUBLE';
+MIN_DOUBLE      : 'MIN_DOUBLE';
 PI              : 'PI';
 GOLDEN_RATIO    : 'GOLDEN_RATIO';
     
+reference
+    : Symbol // ( DOT Symbol )*
+    ;
 
 //Integer Literals
 
@@ -398,7 +387,6 @@ COMMA           : ',';
 DOT             : '.';
 
 EQUALS          : '=';
-ASSIGN          : ':=';
 ADD             : '+';
 SUB             : '-';
 MUL             : '*';

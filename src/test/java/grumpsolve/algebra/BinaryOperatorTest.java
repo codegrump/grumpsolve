@@ -16,7 +16,7 @@ public class BinaryOperatorTest {
 
     @Test
     public void dependsOn() throws Exception {
-        Expression e = new BinaryOperator(x0, x1) {
+        Expression e = new Algebra.BinaryOperator(x0, x1) {
 
             @Override
             public double evaluate(Solution solution) {
@@ -35,7 +35,7 @@ public class BinaryOperatorTest {
 
     @Test
     public void parameters() throws Exception {
-        Expression e = new BinaryOperator(x0, x1) {
+        Expression e = new Algebra.BinaryOperator(x0, x1) {
 
             @Override
             public double evaluate(Solution solution) {

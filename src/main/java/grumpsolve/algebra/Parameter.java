@@ -6,8 +6,8 @@ import grumpsolve.system.Solution;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-import static grumpsolve.algebra.Constant.ONE;
-import static grumpsolve.algebra.Constant.ZERO;
+import static grumpsolve.algebra.Expressions.ONE;
+import static grumpsolve.algebra.Expressions.ZERO;
 
 @Immutable
 public final class Parameter extends Expression implements Comparable<Parameter> {

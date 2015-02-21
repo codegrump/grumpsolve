@@ -20,41 +20,41 @@ public class SquareTest {
 
     @Test
     public void squareZero() throws Exception {
-        Expression expression = Square.square(ZERO);
+        Expression expression = Algebra.Square.square(ZERO);
         assertSame(ZERO, expression);
     }
 
     @Test
     public void squareOne() throws Exception {
-        Expression expression = Square.square(ONE);
+        Expression expression = Algebra.Square.square(ONE);
         assertSame(ONE, expression);
     }
 
     @Test
     public void constant() throws Exception {
-        Expression expression = Square.square(HALF);
+        Expression expression = Algebra.Square.square(HALF);
         assertTrue(expression.isConstant());
         assertEquals(0.25, cv(expression), 1.0e-12);
     }
 
     @Test
     public void parameter() throws Exception {
-        Expression expression = Square.square(x0);
-        assertTrue(expression instanceof Square);
-        UnaryOperator o = (UnaryOperator) expression;
+        Expression expression = Algebra.Square.square(x0);
+        assertTrue(expression instanceof Algebra.Square);
+        Algebra.UnaryOperator o = (Algebra.UnaryOperator) expression;
         assertSame(x0, o.e);
         assertEquals("x0^2", expression.toString());
     }
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Square.square(x0);
+        Expression expression = Algebra.Square.square(x0);
         assertEquals(9.0, expression.evaluate(SOLUTION_3), 1.0e-12);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = Square.square(x0);
+        Expression expression = Algebra.Square.square(x0);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("2.0*x0", partial.toString());

@@ -20,28 +20,28 @@ public class ArcSinTest {
 
     @Test
     public void constant() throws Exception {
-        Expression expression = ArcSin.arcsin(ONE);
+        Expression expression = Algebra.ArcSin.arcsin(ONE);
         assertTrue(expression.isConstant());
         assertEquals(Math.asin(1.0), cv(expression), 1.0e-12);
     }
 
     @Test
     public void parameter() throws Exception {
-        Expression expression = ArcSin.arcsin(x0);
-        assertTrue(expression instanceof ArcSin);
-        UnaryOperator o = (UnaryOperator) expression;
+        Expression expression = Algebra.ArcSin.arcsin(x0);
+        assertTrue(expression instanceof Algebra.ArcSin);
+        Algebra.UnaryOperator o = (Algebra.UnaryOperator) expression;
         assertSame(x0, o.e);
     }
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = ArcSin.arcsin(x0);
+        Expression expression = Algebra.ArcSin.arcsin(x0);
         assertEquals(Math.asin(3.0), expression.evaluate(SOLUTION_3_4), 1.0e-12);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = ArcSin.arcsin(x0);
+        Expression expression = Algebra.ArcSin.arcsin(x0);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("1.0/sqrt(1.0-(x0^2))", partial.toString());

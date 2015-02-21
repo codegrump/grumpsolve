@@ -21,40 +21,40 @@ public class MultiplicationTest {
 
     @Test
     public void multiplyZeroRight() throws Exception {
-        Expression expression = Multiplication.multiply(x0, ZERO);
+        Expression expression = Algebra.Multiplication.multiply(x0, ZERO);
         assertSame(ZERO, expression);
     }
 
     @Test
     public void multiplyZeroLeft() throws Exception {
-        Expression expression = Multiplication.multiply(ZERO, x0);
+        Expression expression = Algebra.Multiplication.multiply(ZERO, x0);
         assertSame(ZERO, expression);
     }
 
     @Test
     public void multiplyOneRight() throws Exception {
-        Expression expression = Multiplication.multiply(x0, ONE);
+        Expression expression = Algebra.Multiplication.multiply(x0, ONE);
         assertSame(x0, expression);
     }
 
     @Test
     public void multiplyOneLeft() throws Exception {
-        Expression expression = Multiplication.multiply(ONE, x0);
+        Expression expression = Algebra.Multiplication.multiply(ONE, x0);
         assertSame(x0, expression);
     }
 
     @Test
     public void multiplyTwoConstants() throws Exception {
-        Expression expression = Multiplication.multiply(HALF, HALF);
+        Expression expression = Algebra.Multiplication.multiply(HALF, HALF);
         assertTrue(expression.isConstant());
         assertEquals(0.25, cv(expression), 0.0);
     }
 
     @Test
     public void multiplyTwoExpressions() throws Exception {
-        Expression expression = Multiplication.multiply(x0, x1);
-        assertTrue(expression instanceof Multiplication);
-        BinaryOperator o = (BinaryOperator) expression;
+        Expression expression = Algebra.Multiplication.multiply(x0, x1);
+        assertTrue(expression instanceof Algebra.Multiplication);
+        Algebra.BinaryOperator o = (Algebra.BinaryOperator) expression;
         assertSame(x0, o.l);
         assertSame(x1, o.r);
         assertEquals("x0*x1", expression.toString());
@@ -62,14 +62,14 @@ public class MultiplicationTest {
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Multiplication.multiply(x0, x1);
+        Expression expression = Algebra.Multiplication.multiply(x0, x1);
         assertEquals(2.0, expression.evaluate(SOLUTION_1_2), 0.0);
         assertEquals(12.0, expression.evaluate(SOLUTION_3_4), 0.0);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = Multiplication.multiply(x0, x1);
+        Expression expression = Algebra.Multiplication.multiply(x0, x1);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("x1", partial.toString());

@@ -21,29 +21,29 @@ public class DivisionTest {
 
     @Test
     public void divideByOne() throws Exception {
-        Expression expression = Division.divide(x0, ONE);
+        Expression expression = Algebra.Division.divide(x0, ONE);
         assertSame(x0, expression);
     }
 
     @Test
     public void zeroDivideAnything() throws Exception {
-        Expression expression = Division.divide(ZERO, x0);
+        Expression expression = Algebra.Division.divide(ZERO, x0);
         assertSame(ZERO, expression);
     }
 
 
     @Test
     public void divideTwoConstants() throws Exception {
-        Expression expression = Division.divide(ONE, HALF);
+        Expression expression = Algebra.Division.divide(ONE, HALF);
         assertTrue(expression.isConstant());
         assertEquals(2.0, cv(expression), 0);
     }
 
     @Test
     public void addTwoExpressions() throws Exception {
-        Expression expression = Division.divide(x0, x1);
-        assertTrue(expression instanceof Division);
-        BinaryOperator o = (BinaryOperator) expression;
+        Expression expression = Algebra.Division.divide(x0, x1);
+        assertTrue(expression instanceof Algebra.Division);
+        Algebra.BinaryOperator o = (Algebra.BinaryOperator) expression;
         assertSame(x0, o.l);
         assertSame(x1, o.r);
         assertEquals("x0/x1", expression.toString());
@@ -51,14 +51,14 @@ public class DivisionTest {
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = Division.divide(x0, x1);
+        Expression expression = Algebra.Division.divide(x0, x1);
         assertEquals(0.5, expression.evaluate(SOLUTION_1_2), 0.0);
         assertEquals(0.75, expression.evaluate(SOLUTION_3_4), 0.0);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = Division.divide(x0, x1);
+        Expression expression = Algebra.Division.divide(x0, x1);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("x1/(x1^2)", partial.toString());

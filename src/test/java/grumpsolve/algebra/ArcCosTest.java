@@ -18,29 +18,29 @@ public class ArcCosTest {
 
     @Test
     public void constant() throws Exception {
-        Expression expression = ArcCos.arccos(ONE);
+        Expression expression = Algebra.ArcCos.arccos(ONE);
         assertTrue(expression.isConstant());
         assertEquals(Math.acos(1.0), cv(expression), 1.0e-12);
     }
 
     @Test
     public void parameter() throws Exception {
-        Expression expression = ArcCos.arccos(x0);
-        assertTrue(expression instanceof ArcCos);
-        UnaryOperator o = (UnaryOperator) expression;
+        Expression expression = Algebra.ArcCos.arccos(x0);
+        assertTrue(expression instanceof Algebra.ArcCos);
+        Algebra.UnaryOperator o = (Algebra.UnaryOperator) expression;
         assertSame(x0, o.e);
         assertEquals("acos(x0)", expression.toString());
     }
 
     @Test
     public void evaluate() throws Exception {
-        Expression expression = ArcCos.arccos(x0);
+        Expression expression = Algebra.ArcCos.arccos(x0);
         assertEquals(Math.acos(3.0), expression.evaluate(SOLUTION_3_4), 1.0e-12);
     }
 
     @Test
     public void partialWithRespectTo() throws Exception {
-        Expression expression = ArcCos.arccos(x0);
+        Expression expression = Algebra.ArcCos.arccos(x0);
         {
             Expression partial = expression.partialWithRespectTo(x0);
             assertEquals("-(1.0/sqrt(1.0-(x0^2)))", partial.toString());
