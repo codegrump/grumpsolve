@@ -1,9 +1,6 @@
 package grump;
 
-import com.google.common.collect.BoundType;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import grumpsolve.system.ExpressionList;
 import grumpsolve.system.NewtonSolver;
 import grumpsolve.system.Solution;
@@ -136,7 +133,7 @@ public class Grump {
 
             @Override
             void execute(Runtime.Scope scope) {
-                scope.parameters.unspecified(name);
+                scope.parameters().unspecified(name);
             }
         }
 
@@ -165,7 +162,7 @@ public class Grump {
                     defaultValue = (leftValue + rightValue) / 2.0;
                 }
 
-                scope.parameters.derived(name, defaultValue);
+                scope.parameters().derived(name, defaultValue);
             }
         }
 
@@ -181,14 +178,14 @@ public class Grump {
             @Override
             void execute(Runtime.Scope scope) {
                 Set<Expression.Reference> references = e.references();
-                scope.parameters.assertValidReferences(references);
-                boolean fullyDerived = !scope.parameters.anyParametersUnspecified(references);
+                scope.parameters().assertValidReferences(references);
+                boolean fullyDerived = !scope.parameters().anyParametersUnspecified(references);
                 if (fullyDerived) {
                     double value = e.executeForValue(scope);
-                    scope.parameters.derived(name, value);
+                    scope.parameters().derived(name, value);
                 } else {
-                    scope.parameters.unspecified(name);
-                    scope.constraints.constrain(new Constraint(ImmutableList.of(new Expression.Reference(name), e)));
+                    scope.parameters().unspecified(name);
+                    scope.constraints().constrain(new Constraint(ImmutableList.of(new Expression.Reference(name), e)));
                 }
             }
         }
@@ -234,14 +231,14 @@ public class Grump {
             Set<Expression.Reference> references = equivalentExpressions
                     .stream().map(Expression::references)
                     .flatMap(s -> s.stream()).collect(Collectors.toSet());
-            scope.parameters.assertValidReferences(references);
-            scope.constraints.constrain(this);
+            scope.parameters().assertValidReferences(references);
+            scope.constraints().constrain(this);
         }
 
-        Stream<grumpsolve.algebra.Expression> asSolveExpression(Runtime.Scope scope) {
-            grumpsolve.algebra.Expression l = equivalentExpressions.get(0).asSolveExpression(scope);
+        Stream<grumpsolve.algebra.Expression> asSolveExpression(SolveData solveData) {
+            grumpsolve.algebra.Expression l = equivalentExpressions.get(0).asSolveExpression(solveData);
             return equivalentExpressions.subList(1, equivalentExpressions.size()).stream()
-                    .map(r -> r.asSolveExpression(scope)).map(r -> sub(l, r));
+                    .map(r -> r.asSolveExpression(solveData)).map(r -> sub(l, r));
         }
     }
 
@@ -346,7 +343,7 @@ public class Grump {
 
         abstract double executeForValue(Runtime.Scope scope);
 
-        abstract grumpsolve.algebra.Expression asSolveExpression(Runtime.Scope scope);
+        abstract grumpsolve.algebra.Expression asSolveExpression(SolveData solveData);
 
         static class Constant extends Expression {
 
@@ -387,7 +384,7 @@ public class Grump {
             }
 
             @Override
-            grumpsolve.algebra.Expression asSolveExpression(Runtime.Scope scope) {
+            grumpsolve.algebra.Expression asSolveExpression(SolveData solveData) {
                 return c(constant);
             }
         }
@@ -422,15 +419,15 @@ public class Grump {
 
             @Override
             double executeForValue(Runtime.Scope scope) {
-                scope.parameters.assertValidReference(this);
-                return scope.parameters.derivedValue(this);
+                scope.parameters().assertValidReference(this);
+                return scope.parameters().derivedValue(this);
             }
 
             @Override
-            grumpsolve.algebra.Expression asSolveExpression(Runtime.Scope scope) {
-                return scope.parameters.isDerived(this)
-                        ? c(scope.parameters.derivedValue(this))
-                        : param(name.hashCode());
+            grumpsolve.algebra.Expression asSolveExpression(SolveData solveData) {
+                return solveData.scope().parameters().isDerived(this)
+                        ? c(solveData.scope().parameters().derivedValue(this))
+                        : param(solveData.parameterId(name));
             }
         }
 
@@ -448,8 +445,8 @@ public class Grump {
             }
 
             @Override
-            grumpsolve.algebra.Expression asSolveExpression(Runtime.Scope scope) {
-                return asSolveExpression(e.asSolveExpression(scope));
+            grumpsolve.algebra.Expression asSolveExpression(SolveData solveData) {
+                return asSolveExpression(e.asSolveExpression(solveData));
             }
 
             abstract grumpsolve.algebra.Expression asSolveExpression(grumpsolve.algebra.Expression e);
@@ -499,7 +496,7 @@ public class Grump {
 
             @Override
             double executeForValue(Runtime.Scope scope) {
-                Runtime.Function function = scope.functions.lookupFunction(name, argumentExpressions.size());
+                Runtime.Function function = scope.functions().lookupFunction(name, argumentExpressions.size());
                 double[] arguments = new double[argumentExpressions.size()];
                 for (int i = 0; i < argumentExpressions.size(); i++) {
                     arguments[i] = argumentExpressions.get(i).executeForValue(scope);
@@ -508,13 +505,13 @@ public class Grump {
             }
 
             @Override
-            grumpsolve.algebra.Expression asSolveExpression(Runtime.Scope scope) {
-                Runtime.Function function = scope.functions.lookupFunction(name, argumentExpressions.size());
+            grumpsolve.algebra.Expression asSolveExpression(SolveData solveData) {
+                Runtime.Function function = solveData.scope().functions().lookupFunction(name, argumentExpressions.size());
                 grumpsolve.algebra.Expression[] arguments = new grumpsolve.algebra.Expression[argumentExpressions.size()];
                 for (int i = 0; i < argumentExpressions.size(); i++) {
-                    arguments[i] = argumentExpressions.get(i).asSolveExpression(scope);
+                    arguments[i] = argumentExpressions.get(i).asSolveExpression(solveData);
                 }
-                return function.asSolveExpression(scope, arguments);
+                return function.asSolveExpression(arguments);
             }
         }
 
@@ -534,8 +531,8 @@ public class Grump {
             }
 
             @Override
-            grumpsolve.algebra.Expression asSolveExpression(Runtime.Scope scope) {
-                return asSolveExpression(l.asSolveExpression(scope), r.asSolveExpression(scope));
+            grumpsolve.algebra.Expression asSolveExpression(SolveData solveData) {
+                return asSolveExpression(l.asSolveExpression(solveData), r.asSolveExpression(solveData));
             }
 
             abstract grumpsolve.algebra.Expression asSolveExpression(grumpsolve.algebra.Expression l, grumpsolve.algebra.Expression r);
@@ -615,7 +612,7 @@ public class Grump {
         return new IllegalStateException("Not sure how to compile this");
     }
 
-    private final Runtime.Scope scope = new Runtime.Scope();
+    private final Runtime.Scope scope = new Runtime.TopLevelScope();
 
     public Grump() {
     }
@@ -627,23 +624,56 @@ public class Grump {
         return this;
     }
 
-    public void solve() {
-        final Stream<grumpsolve.algebra.Expression> expressions = scope.constraints.asSolveExpressions(scope);
+    public void solveAndPrint() {
+        final Set<String> parameters = scope.parameters().unspecified;
+        final BiMap<String, Long> parameterTranslationTable = HashBiMap.create();
+        {
+            ImmutableList<String> parameterList = ImmutableList.copyOf(parameters);
+            for (int i = 0; i < parameterList.size(); i++) {
+                parameterTranslationTable.put(parameterList.get(i), (long) i);
+            }
+        }
 
+        final Stream<grumpsolve.algebra.Expression> expressions = scope.constraints().asSolveExpressions(new SolveData(scope, parameterTranslationTable));
         final ExpressionList expressionList = ExpressionList.from(expressions.collect(Collectors.toList()));
-        Set<Long> solveParameters = scope.parameters.unspecified.stream().map(p -> (long) p.hashCode()).collect(Collectors.toSet());
-        Solution s0 = Solution.zero(solveParameters);
-        Solution s = NewtonSolver.make(expressionList).newtonSolve(s0);
+        
+        
+        final Solution s0 = Solution.zero(parameterTranslationTable.values());
+        final Solution s = NewtonSolver.make(expressionList).newtonSolve(s0);
         System.out.println(s);
     }
 
     static class Runtime {
 
-        static class Scope {
+        static interface Scope {
+
+            Parameters parameters();
+
+            Constraints constraints();
+
+            Functions functions();
+        }
+
+        static class TopLevelScope implements Scope {
 
             final Parameters parameters = new Parameters();
             final Constraints constraints = new Constraints();
             final Functions functions = new Functions();
+
+            @Override
+            public Parameters parameters() {
+                return parameters;
+            }
+
+            @Override
+            public Constraints constraints() {
+                return constraints;
+            }
+
+            @Override
+            public Functions functions() {
+                return functions;
+            }
         }
 
         static class Parameters {
@@ -707,8 +737,8 @@ public class Grump {
                 constraints.add(constraint);
             }
 
-            public Stream<grumpsolve.algebra.Expression> asSolveExpressions(Scope scope) {
-                return constraints.stream().map(c -> c.asSolveExpression(scope)).flatMap(s -> s);
+            public Stream<grumpsolve.algebra.Expression> asSolveExpressions(SolveData solveData) {
+                return constraints.stream().map(c -> c.asSolveExpression(solveData)).flatMap(s -> s);
             }
         }
 
@@ -764,7 +794,7 @@ public class Grump {
 
             abstract double safeEval(double[] arguments);
 
-            abstract grumpsolve.algebra.Expression asSolveExpression(Scope scope, grumpsolve.algebra.Expression[] arguments);
+            abstract grumpsolve.algebra.Expression asSolveExpression(grumpsolve.algebra.Expression[] arguments);
 
 
             static final Function Square = new Function("square", 1) {
@@ -776,12 +806,36 @@ public class Grump {
                 }
 
                 @Override
-                grumpsolve.algebra.Expression asSolveExpression(Scope scope, grumpsolve.algebra.Expression[] a) {
+                grumpsolve.algebra.Expression asSolveExpression(grumpsolve.algebra.Expression[] a) {
                     return square(a[0]);
                 }
             };
 
 
+        }
+    }
+    
+    static class SolveData {
+
+
+        final Runtime.Scope scope;
+        final Map<String, Long> parameterTranslationTable;
+
+        SolveData(Runtime.Scope scope, Map<String, Long> parameterTranslationTable) {
+            this.scope = scope;
+            this.parameterTranslationTable = ImmutableMap.copyOf(parameterTranslationTable);
+        }
+        
+        Runtime.Scope scope(){
+            return scope;
+        }
+
+        public long parameterId(String name) {
+            Long id = parameterTranslationTable.get(name);
+            if(id == null){
+                throw new RuntimeException();
+            }
+            return id;
         }
     }
 }

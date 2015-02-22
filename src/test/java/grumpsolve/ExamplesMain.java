@@ -26,7 +26,7 @@ public class ExamplesMain {
                     try (FileInputStream in = new FileInputStream(file.toFile())) {
                         statements = Grump.compile(in, errorListener);
                     }
-                    new Grump().execute(statements).solve();
+                    new Grump().execute(statements).solveAndPrint();
                     System.out.println(errorListener.error() ? "error": "");
                     System.out.println();
                 }
