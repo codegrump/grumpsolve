@@ -7,8 +7,7 @@ Because trying to run solvespace in a browser via emscripten made me grumpy.
 ##The plan
 * [x] symbolic algebra
 * [x] simple newton solver
-* [ ] substitution and simple optimizations for solver
-* [ ] 2D geometric constraints represented as equations
+* [x] 2d points, linear rings, line segments which can be constrained across coordinate systems 
 * [ ] .grump scripting language for 2d sketches
-* [ ] 3d geometric constraints represented as equations
-* [ ] .grump scripting language for 3d models
+* [ ] more 2d geometries which can be constrained across geometries
+* [ ] substitution and simple optimizations for solver
