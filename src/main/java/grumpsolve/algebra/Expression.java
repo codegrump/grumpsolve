@@ -9,19 +9,19 @@ import java.util.Set;
 
 public abstract class Expression {
 
-    public final Set<Parameter> parameters() {
-        final Set<Parameter> parameters = new HashSet<>();
-        addParameters(parameters);
-        return parameters;
+    public final Set<Variable> variables() {
+        final Set<Variable> variables = new HashSet<>();
+        addParameters(variables);
+        return variables;
     }
 
-    public abstract boolean dependsOn(@Nonnull Parameter p);
+    public abstract boolean dependsOn(@Nonnull Variable p);
 
     public abstract double evaluate(@Nonnull Solution solution);
 
-    protected abstract void addParameters(@Nonnull Set<Parameter> parameters);
+    protected abstract void addParameters(@Nonnull Set<Variable> variables);
 
-    abstract Expression partialWithRespectTo(@Nonnull Parameter p);
+    abstract Expression partialWithRespectTo(@Nonnull Variable p);
 
     abstract boolean isConstant();
 
@@ -31,7 +31,7 @@ public abstract class Expression {
 
 
     private static Set<Class> excludeParens = ImmutableSet.<Class>of(ArcCos.class, ArcSin.class,
-            Constant.class, Cos.class, Parameter.class, Sin.class, SquareRoot.class);
+            Constant.class, Cos.class, Variable.class, Sin.class, SquareRoot.class);
 
     static String toStringWithOptionalParens(Expression e) {
         return excludeParens.contains(e.getClass())

@@ -30,7 +30,7 @@ class ArcSin extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         // (1/sqrt(1 - e^2))da
         Expression e2 = square(e);
         Expression de = e.partialWithRespectTo(p);

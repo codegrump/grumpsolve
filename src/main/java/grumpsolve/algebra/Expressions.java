@@ -95,11 +95,15 @@ public final class Expressions {
         return Negation.negate(c(e));
     }
 
-    public static Parameter param(long id) {
-        return new Parameter(id);
+    public static Variable var(long id) {
+        return var(id, null);
     }
 
-    public static Expression partialWithRespectTo(@Nonnull Expression e, @Nonnull Parameter p) {
+    public static Variable var(long id, String display) {
+        return new Variable(id, display);
+    }
+
+    public static Expression partialWithRespectTo(@Nonnull Expression e, @Nonnull Variable p) {
         return e.dependsOn(p) ? e.partialWithRespectTo(p) : ZERO;
     }
 
@@ -142,6 +146,14 @@ public final class Expressions {
     }
     public static Expression sub(double l, double r) {
         return Subtraction.subtract(c(l), c(r));
+    }
+
+    public static Expression toRadians(Expression degrees) {
+        return mult(Math.PI, div(degrees, 180.0));
+    }
+
+    public static Expression toDegrees(Expression degrees) {
+        return mult(180.0, div(degrees, Math.PI));
     }
 
     private Expressions() {

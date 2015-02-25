@@ -34,7 +34,7 @@ final class Subtraction extends BinaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         //da - db
         return sub(l.partialWithRespectTo(p), r.partialWithRespectTo(p));
     }

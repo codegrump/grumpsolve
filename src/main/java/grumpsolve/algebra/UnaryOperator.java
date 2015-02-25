@@ -15,13 +15,13 @@ public abstract class UnaryOperator extends Expression {
     }
 
     @Override
-    public final boolean dependsOn(@Nonnull Parameter p) {
+    public final boolean dependsOn(@Nonnull Variable p) {
         return e.dependsOn(p);
     }
 
     @Override
-    protected void addParameters(@Nonnull Set<Parameter> parameters) {
-        e.addParameters(parameters);
+    protected void addParameters(@Nonnull Set<Variable> variables) {
+        e.addParameters(variables);
     }
 
     @Override

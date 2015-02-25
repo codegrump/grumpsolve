@@ -28,7 +28,7 @@ final class Constant extends Expression {
     }
 
     @Override
-    public boolean dependsOn(@Nonnull Parameter p) {
+    public boolean dependsOn(@Nonnull Variable p) {
         return false;
     }
 
@@ -43,12 +43,12 @@ final class Constant extends Expression {
     }
 
     @Override
-    protected void addParameters(@Nonnull Set<Parameter> parameters) {
+    protected void addParameters(@Nonnull Set<Variable> variables) {
         //no addParameters
     }
 
     @Override
-    Expression partialWithRespectTo(Parameter p) {
+    Expression partialWithRespectTo(Variable p) {
         return ZERO;
     }
 

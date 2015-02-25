@@ -31,7 +31,7 @@ class ArcCos extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         Expression e2 = square(e);
         Expression de = e.partialWithRespectTo(p);
 

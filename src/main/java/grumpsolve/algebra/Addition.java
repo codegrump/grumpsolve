@@ -34,7 +34,7 @@ final class Addition extends BinaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         //da + db
         return add(l.partialWithRespectTo(p), r.partialWithRespectTo(p));
     }

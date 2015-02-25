@@ -32,7 +32,7 @@ class SquareRoot extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         // 0.5 e^(-1/2) da =>
         // (0.5 / sqrt(e)) da
         return mult(div(HALF, this), e.partialWithRespectTo(p));

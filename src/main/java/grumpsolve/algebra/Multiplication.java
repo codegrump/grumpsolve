@@ -35,7 +35,7 @@ class Multiplication extends BinaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         Expression da = l.partialWithRespectTo(p);
         Expression db = r.partialWithRespectTo(p);
         //bda + adb

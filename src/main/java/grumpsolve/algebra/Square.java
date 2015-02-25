@@ -33,7 +33,7 @@ class Square extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         Expression _2a = mult(c(2), e);
         Expression da = e.partialWithRespectTo(p);
         //2ada

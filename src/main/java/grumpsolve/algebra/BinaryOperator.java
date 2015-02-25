@@ -17,14 +17,14 @@ abstract class BinaryOperator extends Expression {
     }
 
     @Override
-    public final boolean dependsOn(@Nonnull Parameter p) {
+    public final boolean dependsOn(@Nonnull Variable p) {
         return l.dependsOn(p) || r.dependsOn(p);
     }
 
     @Override
-    protected void addParameters(@Nonnull Set<Parameter> parameters) {
-        l.addParameters(parameters);
-        r.addParameters(parameters);
+    protected void addParameters(@Nonnull Set<Variable> variables) {
+        l.addParameters(variables);
+        r.addParameters(variables);
     }
 
     @Override

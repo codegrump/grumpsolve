@@ -2,24 +2,29 @@ package grumpsolve.system;
 
 import com.google.common.collect.ImmutableList;
 import grumpsolve.algebra.Expression;
-import grumpsolve.algebra.Parameter;
+import grumpsolve.algebra.Variable;
 import no.uib.cipr.matrix.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static grumpsolve.Constants.NEWTON_CONVERGE_TOLERANCE;
 import static grumpsolve.algebra.Expressions.partialWithRespectTo;
-import static grumpsolve.Constants.*;
 
 public class NewtonSolver {
 
     private static final int NUM_NEWTON_ITER = 50;
 
+    public static NewtonSolver make(@Nonnull List<Expression> constraints) {
+        final ExpressionList expressions = new ExpressionList(constraints);
+        return make(expressions);
+    }
+
     public static NewtonSolver make(@Nonnull ExpressionList expressions) {
-        ImmutableList<Parameter> parameters = ImmutableList.copyOf(expressions.parameters());
+        ImmutableList<Variable> variables = ImmutableList.copyOf(expressions.parameters());
 
         int m = expressions.size();
-        int n = parameters.size();
+        int n = variables.size();
 
         Expression[][] A = new Expression[m][n];
         Expression[] B = new Expression[m];
@@ -28,25 +33,25 @@ public class NewtonSolver {
             Expression expression = expressions.get(i);
             B[i] = expression;
 
-            for (int j = 0; j < parameters.size(); j++) {
-                Parameter parameter = parameters.get(j);
-                A[i][j] = partialWithRespectTo(expression, parameter);
+            for (int j = 0; j < variables.size(); j++) {
+                Variable variable = variables.get(j);
+                A[i][j] = partialWithRespectTo(expression, variable);
             }
         }
-        return new NewtonSolver(m, n, A, B, parameters);
+        return new NewtonSolver(m, n, A, B, variables);
     }
 
     private final int m, n;
     private final Expression[][] A;
     private final Expression[] B;
-    private final List<Parameter> parameters;
+    private final List<Variable> variables;
 
-    private NewtonSolver(int m, int n, Expression[][] A, Expression[] B, List<Parameter> parameters) {
+    private NewtonSolver(int m, int n, Expression[][] A, Expression[] B, List<Variable> variables) {
         this.m = m;
         this.n = n;
         this.A = A;
         this.B = B;
-        this.parameters = parameters;
+        this.variables = variables;
     }
 
     public Solution newtonSolve(@Nonnull Solution s0) {
@@ -57,9 +62,9 @@ public class NewtonSolver {
         final Workspace workspace = new Workspace();
         do {
             workspace.evaluateJacobian(solution);
-            if(!workspace.solveLeastSquares()) break;
+            if (!workspace.solveLeastSquares()) break;
             solution = workspace.newtonStep(solution);
-            if(solution == null){
+            if (solution == null) {
                 break;
             }
             workspace.reevaluateB(solution);
@@ -107,10 +112,10 @@ public class NewtonSolver {
 
         private Solution newtonStep(Solution solution) {
             Solution.Builder newSolution = solution.builder();
-            for(int i = 0; i < n; i++) {
-                Parameter p = parameters.get(i);
-                double value = newSolution.add(p, - x.get(i));
-                if(Double.isNaN(value)) {
+            for (int i = 0; i < n; i++) {
+                Variable p = variables.get(i);
+                double value = newSolution.add(p, -x.get(i));
+                if (Double.isNaN(value)) {
                     newSolution = null;
                     break;
                 }
@@ -130,7 +135,7 @@ public class NewtonSolver {
             boolean converged = true;
             for (VectorEntry entry : b) {
                 double bi = entry.get();
-                if(Double.isNaN(bi) || Math.abs(bi) > NEWTON_CONVERGE_TOLERANCE) {
+                if (Double.isNaN(bi) || Math.abs(bi) > NEWTON_CONVERGE_TOLERANCE) {
                     converged = false;
                     break;
                 }

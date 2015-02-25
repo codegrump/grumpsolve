@@ -31,7 +31,7 @@ class Cos extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         //-sin(e)da
         return neg(mult(sin(e), e.partialWithRespectTo(p)));
     }

@@ -2,7 +2,7 @@ package grumpsolve.system;
 
 import com.google.common.collect.ImmutableList;
 import grumpsolve.algebra.Expression;
-import grumpsolve.algebra.Parameter;
+import grumpsolve.algebra.Variable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -21,16 +21,16 @@ public class ExpressionList {
 
     private final List<Expression> expressions;
 
-    private ExpressionList(@Nonnull List<Expression> expressions) {
+    ExpressionList(@Nonnull List<Expression> expressions) {
         this.expressions = ImmutableList.copyOf(expressions);
     }
 
-    public Set<Parameter> parameters() {
-        final TreeSet<Parameter> parameters = new TreeSet<>();
+    public Set<Variable> parameters() {
+        final TreeSet<Variable> variables = new TreeSet<>();
         for (Expression expression : expressions) {
-            parameters.addAll(expression.parameters());
+            variables.addAll(expression.variables());
         }
-        return parameters;
+        return variables;
     }
 
     public Expression get(int index) {

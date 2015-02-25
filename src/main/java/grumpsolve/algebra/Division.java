@@ -34,7 +34,7 @@ class Division extends BinaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         Expression da = l.partialWithRespectTo(p);
         Expression bda = mult(r, da);
 

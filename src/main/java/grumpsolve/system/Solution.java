@@ -2,7 +2,7 @@ package grumpsolve.system;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import grumpsolve.algebra.Parameter;
+import grumpsolve.algebra.Variable;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -11,16 +11,20 @@ import java.util.Set;
 
 public class Solution {
 
-    public static Solution zero(@Nonnull Set<Parameter> parameters) {
+    public static Solution zero(@Nonnull Set<Variable> variables) {
+        return constant(variables, 0.0);
+    }
+
+    public static Solution constant(@Nonnull Set<Variable> variables, double constant) {
         final Map<Long, Double> parameterValues = new HashMap<>();
-        for (Parameter p : parameters) {
-            parameterValues.put(p.getId(), 0.0);
+        for (Variable p : variables) {
+            parameterValues.put(p.getId(), constant);
         }
         return new Solution(parameterValues);
     }
 
-    public static Builder from(@Nonnull Set<Parameter> parameters) {
-        return zero(parameters).builder();
+    public static Builder from(@Nonnull Set<Variable> variables) {
+        return zero(variables).builder();
     }
 
     private final Map<Long, Double> parameterValues;
@@ -79,7 +83,7 @@ public class Solution {
             return newValue;
         }
 
-        public Builder set(@Nonnull Parameter p, double v) {
+        public Builder set(@Nonnull Variable p, double v) {
             return set(p.getId(), v);
         }
 
@@ -89,7 +93,7 @@ public class Solution {
             return this;
         }
 
-        public double add(@Nonnull Parameter p, double value) {
+        public double add(@Nonnull Variable p, double value) {
             return add(p.getId(), value);
         }
 

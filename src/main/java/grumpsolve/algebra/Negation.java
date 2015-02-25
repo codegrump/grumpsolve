@@ -32,7 +32,7 @@ final class Negation extends UnaryOperator {
     }
 
     @Override
-    Expression partialWithRespectTo(@Nonnull Parameter p) {
+    Expression partialWithRespectTo(@Nonnull Variable p) {
         return negate(e.partialWithRespectTo(p));
     }
 }

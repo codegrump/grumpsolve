@@ -1,7 +1,7 @@
 package grumpsolve.system;
 
 import grumpsolve.algebra.Expression;
-import grumpsolve.algebra.Parameter;
+import grumpsolve.algebra.Variable;
 import org.junit.Test;
 
 import java.util.Set;
@@ -16,16 +16,17 @@ public class NewtonSolverTest {
     public void simple_fullyConstrained() throws Exception {
         final ExpressionList expressions;
         {
-            Parameter x0 = new Parameter(0);
-            Parameter x1 = new Parameter(1);
+            Variable x0 = new Variable(0,null);
+            Variable x1 = new Variable(1, null);
 
             Expression e0 = sub(x0, 5);  // x0 = 5
             Expression e1 = sub(mult(2, x0), x1); // 2x0 = x1
+            
             expressions = ExpressionList.from(e0, e1);
         }
 
-        final Set<Parameter> parameters = expressions.parameters();
-        final Solution s0 = Solution.from(parameters).set(0, 0.5).set(1, 1).build();
+        final Set<Variable> variables = expressions.parameters();
+        final Solution s0 = Solution.from(variables).set(0, 0.5).set(1, 1).build();
         final NewtonSolver newtonSolver = NewtonSolver.make(expressions);
         final Solution solution = newtonSolver.newtonSolve(s0);
 
@@ -38,16 +39,16 @@ public class NewtonSolverTest {
     public void pointOnACircle_almostFullyConstrained() throws Exception {
         final ExpressionList expressions;
         {
-            Parameter x0 = new Parameter(0);
-            Parameter x1 = new Parameter(1);
+            Variable x0 = new Variable(0);
+            Variable x1 = new Variable(1);
 
             Expression e0 = sub(add(square(x0), square(x1)), 1);
             Expression e1 = sub(x0, 0.5); // 2x0 = x1
             expressions = ExpressionList.from(e0, e1);
         }
 
-        final Set<Parameter> parameters = expressions.parameters();
-        final Solution s0 = Solution.from(parameters).set(0, 0.2).set(1, 0.1).build();
+        final Set<Variable> variables = expressions.parameters();
+        final Solution s0 = Solution.from(variables).set(0, 0.2).set(1, 0.1).build();
         final NewtonSolver newtonSolver = NewtonSolver.make(expressions);
         final Solution solution = newtonSolver.newtonSolve(s0);
 
@@ -60,15 +61,15 @@ public class NewtonSolverTest {
     public void pointOnACircle_underConstrained() throws Exception {
         final ExpressionList expressions;
         {
-            Parameter x0 = new Parameter(0);
-            Parameter x1 = new Parameter(1);
+            Variable x0 = new Variable(0);
+            Variable x1 = new Variable(1);
 
             Expression e0 = sub(add(square(x0), square(x1)), 1);
             expressions = ExpressionList.from(e0);
         }
 
-        final Set<Parameter> parameters = expressions.parameters();
-        final Solution s0 = Solution.from(parameters).set(0, 0.2).set(1, 0.1).build();
+        final Set<Variable> variables = expressions.parameters();
+        final Solution s0 = Solution.from(variables).set(0, 0.2).set(1, 0.1).build();
         final NewtonSolver newtonSolver = NewtonSolver.make(expressions);
         final Solution solution = newtonSolver.newtonSolve(s0);
 
@@ -83,15 +84,15 @@ public class NewtonSolverTest {
         final ExpressionList expressions;
         {
             //center of circle at (5, 3.5)
-            Parameter x0 = new Parameter(0);
-            Parameter x1 = new Parameter(1);
+            Variable x0 = new Variable(0);
+            Variable x1 = new Variable(1);
 
             Expression e0 = sub(x0, 5);
             Expression e1 = sub(x1, 3.5);
 
             //point on the circle is .5 away from center in the x direction, radius is 1
-            Parameter x2 = new Parameter(2);
-            Parameter x3 = new Parameter(3);
+            Variable x2 = new Variable(2);
+            Variable x3 = new Variable(3);
 
             Expression e2 = sub(x2, add(x0, 0.5));
             Expression e3 = sub(sqrt(add(square(sub(x2, x0)), square(sub(x3, x1)))), 1);
@@ -99,8 +100,8 @@ public class NewtonSolverTest {
             expressions = ExpressionList.from(e0, e1, e2, e3);
         }
 
-        final Set<Parameter> parameters = expressions.parameters();
-        final Solution s0 = Solution.from(parameters).set(0, 0.2).set(1, 0.1).build();
+        final Set<Variable> variables = expressions.parameters();
+        final Solution s0 = Solution.from(variables).set(0, 0.2).set(1, 0.1).build();
         final NewtonSolver newtonSolver = NewtonSolver.make(expressions);
         final Solution solution = newtonSolver.newtonSolve(s0);
 
@@ -123,28 +124,28 @@ public class NewtonSolverTest {
     @Test
     public void tetrahedron_point_at_origin() throws Exception {
         final ExpressionList expressions;
-        final Set<Parameter> parameters;
+        final Set<Variable> variables;
         final Solution s0;
         {
             //tip of tetrahedron of circle at (5, 3.5)
-            Parameter x0 = new Parameter(0);
-            Parameter y0 = new Parameter(1);
-            Parameter z0 = new Parameter(2);
+            Variable x0 = new Variable(0);
+            Variable y0 = new Variable(1);
+            Variable z0 = new Variable(2);
 
             //south-west corner
-            Parameter x1 = new Parameter(10);
-            Parameter y1 = new Parameter(11);
-            Parameter z1 = new Parameter(12);
+            Variable x1 = new Variable(10);
+            Variable y1 = new Variable(11);
+            Variable z1 = new Variable(12);
 
             //south-east corner
-            Parameter x2 = new Parameter(20);
-            Parameter y2 = new Parameter(21);
-            Parameter z2 = new Parameter(22);
+            Variable x2 = new Variable(20);
+            Variable y2 = new Variable(21);
+            Variable z2 = new Variable(22);
 
             //north
-            Parameter x3 = new Parameter(30);
-            Parameter y3 = new Parameter(31);
-            Parameter z3 = new Parameter(32);
+            Variable x3 = new Variable(30);
+            Variable y3 = new Variable(31);
+            Variable z3 = new Variable(32);
 
             //expressions fo the sides of the tetrahedron
             Expression topToSouthWest = sqrt(add(square(sub(x0, x1)), square(sub(y0, y1)), square(sub(z0, z1))));
@@ -175,8 +176,8 @@ public class NewtonSolverTest {
 
             //12 parameters, 12 degrees of freedom
             expressions = ExpressionList.from(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
-            parameters = expressions.parameters();
-            s0 = Solution.from(parameters)
+            variables = expressions.parameters();
+            s0 = Solution.from(variables)
                 .set(x0, 0.1).set(1, 0.1).set(2, 0.1) //offset from origin to show it moves there
                 .set(10, -1.1).set(11, -1.2).set(12, -1.3) //south west
                 .set(20, 0.9).set(21, -1.0).set(22, -1.11) //south east
