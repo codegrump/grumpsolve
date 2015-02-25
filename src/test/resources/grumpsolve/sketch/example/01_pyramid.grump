@@ -1,0 +1,54 @@
+//goal of creator methods is to declare geometries which will be fully constrained iff
+sketch EquilateralTriangle {
+    Point p, q, r;
+    
+    //origin is p
+    creator (Expression side){
+        this.p = origin, //this is the local origin
+        this.q = Point(side/2.0, sqrt(3.0/4.0) * side),
+        this.r = Point(side, 0.0);
+    }
+}
+
+sketch Floor {
+    
+    EquilateralTriangle[] triangles = [];
+    Point p, q, r, s;
+    
+    creator (Expression side, int widthInTriangles){
+        for(int i in range(0, widthInTriangles)){
+            triangles.add(EquilateralTriangle(side));
+        }
+        
+        triangles[0].p = origin;
+        for(int i in range(0, widthInTriangles-1)){
+            constraint triangles[i].r = triangles[i+1].p;
+        }
+        
+        this.p = triangles[0].p,
+        this.q = triangles[0].q,
+        this.r = triangles.last.q,
+        this.s = triangles.last.r;
+    }
+}
+
+sketch Pyramid {
+    Floor[] floors = [];
+    
+    creator (int numFloors, Expression unit){
+        for(int i in range(0, numFloors)){
+            Floor floor = Floor(unit, numFloors - i );
+            floors.add(floor);
+        }
+        floors[0].p = origin;
+        for(int i in range(0, numFloors-1)){
+            constraint floors[i].q = floors[i+1].p;
+        }
+    }
+}
+
+example {
+    int parameter numFloors = domain(above 0 default 2);
+    parameter unit = domain(above 0.0, default 1.0);
+    Pyramid pyramid = Pyramid(numFloors, unit);
+}

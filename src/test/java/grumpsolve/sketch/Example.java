@@ -9,24 +9,17 @@ public class Example {
 
     public static void main(String[] args) {
         Workspace workspace = new Workspace() {
-
             Variable height;
-
             protected void setup() {
                 Expression side = c(1.0);
                 height = var("height");
                 Expression halfSide = div(side, c(2.0));
-                Variable rotate = var("rotate");
-                
-                Sketch flipped = root.sketch(halfSide, 0.0, rotate);
 
-                
-                Point bl = flipped.point(neg(halfSide), ZERO);
-                Point br = flipped.point(halfSide, ZERO);
-                Point top = flipped.point(ZERO, height);
+                Point bl = point(neg(halfSide), ZERO);
+                Point br = point(halfSide, ZERO);
+                Point top = point(ZERO, height);
 
                 constrain(distance(bl, top), side);
-                constrain(top.asGlobal().x(), side);
             }
         };
 

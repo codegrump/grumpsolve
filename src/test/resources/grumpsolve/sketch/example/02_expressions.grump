@@ -1,0 +1,21 @@
+Expression parabola(Expression x, Expression a, Expression b, Expression c) {
+    return a * square(x) + b * x + c;
+}
+
+example {
+    parameter a = domain(default 1.0), 
+        b = domain(default 1.0), 
+        c = domain(default 0.0);
+        
+    int parameter divisions = domain(atleast 10 default 10);
+    
+    Expression abc_parabola(Expression x){
+        return parabola(x, a, b, c);
+    }
+        
+    Point[] points = [];
+    for(int i = 0; i <= divisions; i++){
+        Point p = Point(x, parabola(x));
+        points.add(p);
+    }
+}

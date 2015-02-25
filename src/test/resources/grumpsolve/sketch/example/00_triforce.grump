@@ -1,0 +1,29 @@
+//goal of creator methods is to declare geometries which will be fully constrained iff
+sketch Triangle {
+    Point p, q, r;
+    
+    //these points are wrappers around the arguments which convert between parent and child coordinate system 
+    creator (Point p, Point q, Point r){
+        this.p = p,
+        this.q = q;
+        this.r = r;
+    }
+    
+    //origin is p
+    creator Equilateral(Expression side){
+        this.p = Point(0.0, 0.0),
+        this.q = Point(side/2.0, sqrt(3.0/4.0) * side),
+        this.r = Point(side, 0.0);
+    }
+}
+
+example {
+    parameter side = domain(above 0, default 1.0);
+
+    Triangle power = Triangle.Equilateral(side),
+        wisdom = Triangle.Equilateral(side),
+        courage = Triangle.Equilateral(side);
+
+    constraint wisdom.r = courage.p = origin,
+        wisdom.q = power.p;
+}

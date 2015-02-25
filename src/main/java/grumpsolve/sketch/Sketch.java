@@ -3,7 +3,6 @@ package grumpsolve.sketch;
 import grumpsolve.algebra.Expression;
 import grumpsolve.algebra.Expressions;
 import grumpsolve.sketch.geometry.Geometry;
-import grumpsolve.sketch.geometry.LinearRing;
 import grumpsolve.sketch.geometry.Point;
 import grumpsolve.system.Solution;
 
@@ -41,16 +40,6 @@ public class Sketch implements CoordinateSystem, Geometry {
         return p;
     }
 
-    public LinearRing linearRing(List<Point> points) {
-        LinearRing l = new LinearRing(this, points);
-        geometries.add(l);
-        return l;
-    }
-
-    public LinearRing.Builder LinearRing() {
-        return new LinearRing.Builder(this);
-    }
-
     public Sketch sketch(TranslateRotate translateRotate) {
         Sketch sketch = new Sketch(this, translateRotate);
         geometries.add(sketch);
@@ -59,7 +48,7 @@ public class Sketch implements CoordinateSystem, Geometry {
 
     @Override
     public Sketch asGlobal() {
-        return new Sketch(GLOBAL, fromGlobal()  );
+        return new Sketch(GLOBAL, fromGlobal());
     }
 
     public void draw(Solution solution) {

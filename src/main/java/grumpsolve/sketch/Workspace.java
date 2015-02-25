@@ -88,6 +88,7 @@ public abstract class Workspace {
     }
 
     protected static Expression distance(Point p, Point q) {
+        
         final Expression dx2 = square(sub(p.x(), q.x())),
                 dy2 = square(sub(p.y(), q.y()));
         return sqrt(add(dx2, dy2));
